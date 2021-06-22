@@ -79,7 +79,7 @@ namespace Ne{
         void scanToken();
         void addToken(TokenType tokenType, const std::string& value);
         void addToken(TokenType tokenType);
-        bool match(char c);
+        [[nodiscard]] bool match(char c);
         void string();
         [[nodiscard]] bool isDigit(char c);
         void number();

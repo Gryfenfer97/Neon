@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <Lexer.hpp>
+#include <AstPrinter.hpp>
 
 void run(const std::string& code){
     Ne::Lexer lexer{code};
@@ -44,15 +45,28 @@ void runPrompt(){
 }
 
 int main(int argc, char *argv[]){
-    if (argc > 2){
-        std::cout << "too many arguments";
-        return 10;
-    }
-    else if(argc == 2){
-        runFile(argv[0]);
-    }
-    else{
-        runPrompt();
-    }
+    // if (argc > 2){
+    //     std::cout << "too many arguments";
+    //     return 10;
+    // }
+    // else if(argc == 2){
+    //     runFile(argv[0]);
+    // }
+    // else{
+    //     runPrompt();
+    // }
+
+    auto expr = Ne::createBinaryEV(
+        Ne::createUnaryEV(
+            Ne::Token(Ne::TokenType::MINUS, "-", 1),
+            Ne::createLiteralEV("123")
+        ),
+        Ne::Token(Ne::TokenType::STAR, "*",1),
+        Ne::createGroupingEV(
+            Ne::createLiteralEV("47.65")
+        )
+    );
+    std::cout << Ne::toString(expr) << std::endl;
+
     return 0;
 }
