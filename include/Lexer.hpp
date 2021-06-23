@@ -17,7 +17,7 @@ namespace Ne{
         LESS, LESS_EQUAL,
 
         // Literals.
-        IDENTIFIER, STRING, NUMBER,
+        IDENTIFIER, STRING, INT, DOUBLE,
 
         // Keywords.
         AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,

@@ -94,8 +94,14 @@ namespace Ne{
         if(match({TokenType::FALSE})) return createLiteralEV("false");
         else if(match({TokenType::TRUE})) return createLiteralEV("true");
         else if(match({TokenType::NIL})) return createLiteralEV("nil");
-        else if(match({TokenType::STRING, TokenType::NUMBER})){
+        else if(match({TokenType::STRING})){
             return createLiteralEV(previous().toString());
+        }
+        else if(match({TokenType::INT})){
+            return createLiteralEV(std::stoi(previous().toString()));
+        }
+        else if(match({TokenType::DOUBLE})){
+            return createLiteralEV(std::stod(previous().toString()));
         }
         else if(match({TokenType::LEFT_PAREN})){
             ExprVariant expr = expression();

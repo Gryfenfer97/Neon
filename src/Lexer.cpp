@@ -82,14 +82,16 @@ bool Lexer::isDigit(char c){
 }
 
 void Lexer::number(){
+    bool isDouble = false;
     while(isDigit(*current) && current != m_source.end()){
         ++current;
     }
     if(*current == '.' && isDigit(*(current+1))){
+        isDouble = true;
         ++current;
         while(isDigit(*current) && current != m_source.end()) ++current;
     }
-    addToken(TokenType::NUMBER, std::string(start, current));
+    addToken(isDouble ? TokenType::DOUBLE : TokenType::INT, std::string(start, current));
     current--;
 }
 

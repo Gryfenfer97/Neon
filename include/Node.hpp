@@ -19,6 +19,8 @@ namespace Ne{
 
     using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr>;
 
+    using LiteralObject = std::variant<std::string, int, double, bool>;
+
     struct Expr::Binary{
         ExprVariant left;
         Token op;
@@ -32,8 +34,8 @@ namespace Ne{
     };
 
     struct Expr::Literal{
-        std::string literal;
-        Literal(const std::string& literal);
+        LiteralObject literal;
+        Literal(const LiteralObject& literal);
     };
 
     struct Expr::Unary{
@@ -44,6 +46,6 @@ namespace Ne{
 
     ExprVariant createBinaryEV(ExprVariant left, Token op, ExprVariant right);
     ExprVariant createGroupingEV(ExprVariant expression);
-    ExprVariant createLiteralEV(const std::string& literal);
+    ExprVariant createLiteralEV(const LiteralObject& literal);
     ExprVariant createUnaryEV(Token op, ExprVariant right);
 }

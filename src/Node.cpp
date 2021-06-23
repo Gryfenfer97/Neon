@@ -9,7 +9,7 @@ Expr::Binary::Binary(ExprVariant left, Token op, ExprVariant right) :
 Expr::Grouping::Grouping(ExprVariant expression) : expression(std::move(expression))
 {}
 
-Expr::Literal::Literal(const std::string& literal) : literal(literal)
+Expr::Literal::Literal(const LiteralObject& literal) : literal(literal)
 {}
 
 Expr::Unary::Unary(Token op, ExprVariant right) : 
@@ -24,7 +24,7 @@ ExprVariant Ne::createGroupingEV(ExprVariant expression){
     return std::make_unique<Expr::Grouping>(std::move(expression));
 }
 
-ExprVariant Ne::createLiteralEV(const std::string& literal){
+ExprVariant Ne::createLiteralEV(const LiteralObject& literal){
     return std::make_unique<Expr::Literal>(literal);
 }
 

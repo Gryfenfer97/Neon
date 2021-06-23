@@ -19,7 +19,20 @@ namespace Ne{
             case 2: // Literal
             {
                 const LiteralExpr& literalExpr = std::get<LiteralExpr>(expr);
-                text = literalExpr->literal;
+                switch(literalExpr->literal.index()){
+                case 0: // string
+                    text = std::get<std::string>(literalExpr->literal);
+                    break;
+                case 1: // int
+                    text = std::to_string(std::get<int>(literalExpr->literal));
+                    break;
+                case 2: // double
+                    text = std::to_string(std::get<double>(literalExpr->literal));
+                    break;
+                case 3: // double
+                    text = std::get<bool>(literalExpr->literal) ? "True" : "False";
+                    break;
+                }
                 break;
             }
             case 3: // Unary
