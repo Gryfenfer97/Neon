@@ -1,0 +1,12 @@
+{
+    "name": "C++ Launch (Linux)",
+    "type": "cppvsdbg",
+    "request": "launch",
+    "program": "./Neon",
+    "args": [],
+    "environment": [{ "name": "config", "value": "Debug" }],
+    "cwd": "${workspaceFolder}/build",
+    "showDisplayString": true
+  }
+  
+  
