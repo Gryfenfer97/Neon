@@ -56,6 +56,10 @@ namespace Ne{
         std::string toString(){
             return m_lexme;
         }
+
+        TokenType getType(){
+            return m_tokenType;
+        }
     private:
         TokenType m_tokenType;
         std::string m_lexme;

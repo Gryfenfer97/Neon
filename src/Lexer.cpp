@@ -26,6 +26,9 @@ void Lexer::scanToken(){
         case ',': addToken(TokenType::COMMA); break;
         case '.': addToken(TokenType::DOT); break;
         case '+': addToken(TokenType::PLUS); break;
+        case '-': addToken(TokenType::MINUS); break;
+        case '*': addToken(TokenType::STAR); break;
+        case '/': addToken(TokenType::SLASH); break;
         case ':': addToken(TokenType::COLON); break;
         case '!':
             addToken(match('=') ? TokenType::BANG_EQUAL : TokenType::BANG);
