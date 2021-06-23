@@ -16,11 +16,11 @@ void run(const std::string& code){
     // }
     Ne::Parser parser(tokens);
     auto expr = parser.parse();
-    std::cout << Ne::toString(expr) << std::endl;
+    // std::cout << Ne::toString(expr) << std::endl;
 
-    // Ne::Interpreter interpreter;
-    // auto obj = interpreter.evaluate(std::move(expr));
-    // std::cout << interpreter.stringify(obj) << std::endl;
+    Ne::Interpreter interpreter;
+    auto obj = interpreter.evaluate(std::move(expr));
+    std::cout << interpreter.stringify(obj) << std::endl;
 }
 
 std::string readFile(std::string_view path){

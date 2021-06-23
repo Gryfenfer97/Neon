@@ -31,10 +31,18 @@ void Lexer::scanToken(){
         case '/': addToken(TokenType::SLASH); break;
         case ':': addToken(TokenType::COLON); break;
         case '!':
-            addToken(match('=') ? TokenType::BANG_EQUAL : TokenType::BANG);
+            if(match('=')){
+                addToken(TokenType::BANG_EQUAL);
+            }else{
+                addToken(TokenType::BANG);
+            }
             break;
         case '=':
-            addToken(match('=') ? TokenType::EQUAL_EQUAL : TokenType::EQUAL);
+            if(match('=')){
+                addToken(TokenType::EQUAL_EQUAL);
+            }else{
+                addToken(TokenType::EQUAL);
+            }
             break;
         case '"': string(); break;
         default:
@@ -57,9 +65,9 @@ void Lexer::addToken(TokenType tokenType){
 }
 
 bool Lexer::match(char c){
+    current++;
     if(current == m_source.end()) return false;
     if(*current != c) return false;
-    current++;
     return true;
 }
 
