@@ -5,8 +5,31 @@ namespace Ne{
         current = this->tokens.begin();
     }
 
-    ExprVariant Parser::parse(){
-        return expression();
+    std::vector<StmtVariant> Parser::parse(){
+        // return expression();
+        std::vector<StmtVariant> statements;
+        while (!isAtEnd()) {
+            statements.push_back(statement());
+        }
+
+        return statements; 
+    }
+
+    StmtVariant Parser::statement(){
+        if(match({TokenType::PRINT})) return printStatement();
+        return expressionStatement();
+    }
+
+    StmtVariant Parser::printStatement(){
+        ExprVariant expr = expression();
+        consume(TokenType::SEMICOLON, "Expect ';' after value.");
+        return createPrintSV(std::move(expr));
+    }
+
+    StmtVariant Parser::expressionStatement(){
+        ExprVariant expr = expression();
+        consume(TokenType::SEMICOLON, "Expect ';' after value.");
+        return createExprSV(std::move(expr));
     }
 
     ExprVariant Parser::expression(){

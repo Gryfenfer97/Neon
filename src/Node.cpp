@@ -31,3 +31,17 @@ ExprVariant Ne::createLiteralEV(const LiteralObject& literal){
 ExprVariant Ne::createUnaryEV(Token op, ExprVariant right){
     return std::make_unique<Expr::Unary>(op, std::move(right));
 }
+
+Stmt::Expr::Expr(ExprVariant expr) : expression(std::move(expr))
+{}
+
+Stmt::Print::Print(ExprVariant expr) : expression(std::move(expr))
+{}
+
+StmtVariant Ne::createExprSV(ExprVariant expr){
+    return std::make_unique<Stmt::Expr>(std::move(expr));
+}
+
+StmtVariant Ne::createPrintSV(ExprVariant expr){
+return std::make_unique<Stmt::Print>(std::move(expr));
+}

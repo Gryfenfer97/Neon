@@ -1,7 +1,7 @@
 #include <Interpreter.hpp>
 
 namespace Ne{
-    LiteralObject Interpreter::evaluate(ExprVariant expr){
+    LiteralObject Interpreter::evaluateExpr(ExprVariant expr){
         switch(expr.index()){
         case 0: // Binary
             return evaluateBinary(std::move(std::get<BinaryExpr>(expr)));
@@ -16,11 +16,25 @@ namespace Ne{
         }
     }
     
+    std::optional<LiteralObject> Interpreter::evaluateStmts(const std::vector<StmtVariant>& statements){
+        for(const auto& stmt : statements){
+            std::optional<LiteralObject> result;
+            switch(stmt.index()){
+            case 0: // Expression
+                result = evaluateExprStmt(std::move(std::get<ExprStmt>(stmt)));
+                break;
+            case 1: // Print
+                result = evaluatePrintStmt(std::move(std::get<PrintStmt>(stmt)));
+                break;
+            }
+            return result;
+        }
+    }
 
     LiteralObject Interpreter::evaluateBinary(ExprVariant expr){
         BinaryExpr exprBinary = std::move(std::get<BinaryExpr>(expr));
-        LiteralObject left = evaluate(std::move(exprBinary->left));
-        LiteralObject right = evaluate(std::move(exprBinary->right));
+        LiteralObject left = evaluateExpr(std::move(exprBinary->left));
+        LiteralObject right = evaluateExpr(std::move(exprBinary->right));
         switch(exprBinary->op.getType()){
         case TokenType::PLUS:
             if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
@@ -64,7 +78,7 @@ namespace Ne{
     }
 
     LiteralObject Interpreter::evaluateGrouping(ExprVariant expr){
-        return evaluate(std::move(expr));
+        return evaluateExpr(std::move(expr));
     }
 
     LiteralObject Interpreter::evaluateLiteral(ExprVariant expr){
@@ -74,7 +88,7 @@ namespace Ne{
 
     LiteralObject Interpreter::evaluateUnary(ExprVariant expr){
         UnaryExpr exprUnary = std::move(std::get<UnaryExpr>(expr));
-        LiteralObject right = evaluate(std::move(exprUnary->right));
+        LiteralObject right = evaluateExpr(std::move(exprUnary->right));
         switch(right.index()){
         case 0: // string
             std::runtime_error("symbol minus before string");
@@ -109,5 +123,16 @@ namespace Ne{
             return std::get<bool>(obj) ? "True" : "False";
         }
         return "";
+    }
+
+    void Interpreter::evaluateExprStmt(ExprStmt stmt){
+        ExprStmt exprStmt = std::move(stmt);
+        evaluateExpr(exprStmt->expression);
+    }
+
+    void Interpreter::evaluatePrintStmt(PrintStmt stmt){
+        ExprStmt printStmt = std::move(stmt);
+        LiteralObject value = evaluateExpr(printStmt->expression);
+        std::cout << stringify(value) << std::endl;
     }
 }

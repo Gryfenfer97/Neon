@@ -48,4 +48,29 @@ namespace Ne{
     ExprVariant createGroupingEV(ExprVariant expression);
     ExprVariant createLiteralEV(const LiteralObject& literal);
     ExprVariant createUnaryEV(Token op, ExprVariant right);
+
+    // Statements
+    namespace Stmt{
+        struct Expr;
+        struct Print;
+    }
+
+    using ExprStmt = std::unique_ptr<Stmt::Expr>;
+    using PrintStmt = std::unique_ptr<Stmt::Print>;
+
+    using StmtVariant = std::variant<ExprStmt, PrintStmt>;
+
+    struct Stmt::Expr{
+        ExprVariant expression;
+        Expr(ExprVariant expr);
+    };
+
+    struct Stmt::Print{
+        ExprVariant expression;
+        Print(ExprVariant expr);
+    };
+
+    StmtVariant createExprSV(ExprVariant expr);
+    StmtVariant createPrintSV(ExprVariant expr);
+
 }

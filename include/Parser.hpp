@@ -6,7 +6,7 @@ namespace Ne{
     class Parser{
     public:
         Parser(const std::vector<Token>& tokens);
-        ExprVariant parse();
+        std::vector<StmtVariant> parse();
 
     private:
         std::vector<Token> tokens;
@@ -14,6 +14,9 @@ namespace Ne{
         ExprVariant expression();
         ExprVariant equality();
         bool match(const std::initializer_list<TokenType>& types);
+        [[nodiscard]] StmtVariant statement();
+        [[nodiscard]] StmtVariant printStatement();
+        [[nodiscard]] StmtVariant expressionStatement();
         [[nodiscard]] Token previous();
         [[nodiscard]] Token advance();
         [[nodiscard]] bool check(TokenType type);

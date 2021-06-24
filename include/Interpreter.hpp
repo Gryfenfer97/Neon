@@ -1,5 +1,6 @@
 #pragma once
 #include <Node.hpp>
+#include <optional>
 
 namespace Ne{
     class Interpreter{
@@ -9,7 +10,10 @@ namespace Ne{
         LiteralObject evaluateLiteral(ExprVariant expr);
         LiteralObject evaluateUnary(ExprVariant expr);
         std::string stringify(LiteralObject obj);
-        LiteralObject evaluate(ExprVariant expr);
+        LiteralObject evaluateExpr(ExprVariant expr);
+        std::optional<LiteralObject> evaluateStmts(const std::vector<StmtVariant>& statements);
+        void evaluateExprStmt(ExprStmt stmt);
+        void evaluatePrintStmt(PrintStmt stmt);
 
     // private:
     };
