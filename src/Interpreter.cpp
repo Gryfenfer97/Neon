@@ -81,7 +81,8 @@ namespace Ne{
     }
 
     LiteralObject Interpreter::evaluateGrouping(ExprVariant expr){
-        return evaluateExpr(std::move(expr));
+        GroupingExpr exprGrouping = std::move(std::get<GroupingExpr>(expr));
+        return evaluateExpr(std::move(exprGrouping->expression));
     }
 
     LiteralObject Interpreter::evaluateLiteral(ExprVariant expr){
