@@ -11,7 +11,7 @@ namespace Ne{
         LiteralObject evaluateUnary(ExprVariant expr);
         std::string stringify(LiteralObject obj);
         LiteralObject evaluateExpr(ExprVariant expr);
-        std::optional<LiteralObject> evaluateStmts(const std::vector<StmtVariant>& statements);
+        void evaluateStmts(std::vector<StmtVariant>& statements);
         void evaluateExprStmt(ExprStmt stmt);
         void evaluatePrintStmt(PrintStmt stmt);
 

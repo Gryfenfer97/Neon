@@ -16,20 +16,23 @@ namespace Ne{
         }
     }
     
-    std::optional<LiteralObject> Interpreter::evaluateStmts(const std::vector<StmtVariant>& statements){
-        for(const auto& stmt : statements){
+    void Interpreter::evaluateStmts(std::vector<StmtVariant>& statements){
+        for(auto& stmt : statements){
             std::optional<LiteralObject> result;
             switch(stmt.index()){
             case 0: // Expression
-                result = evaluateExprStmt(std::move(std::get<ExprStmt>(stmt)));
-                break;
-            case 1: // Print
-                result = evaluatePrintStmt(std::move(std::get<PrintStmt>(stmt)));
+            {
+                evaluateExprStmt(std::move(std::get<ExprStmt>(stmt)));
                 break;
             }
-            return result;
+            case 1: // Print
+                evaluatePrintStmt(std::move(std::get<PrintStmt>(stmt)));
+                break;
+            }
+           
         }
     }
+
 
     LiteralObject Interpreter::evaluateBinary(ExprVariant expr){
         BinaryExpr exprBinary = std::move(std::get<BinaryExpr>(expr));
@@ -126,13 +129,11 @@ namespace Ne{
     }
 
     void Interpreter::evaluateExprStmt(ExprStmt stmt){
-        ExprStmt exprStmt = std::move(stmt);
-        evaluateExpr(exprStmt->expression);
+        evaluateExpr(std::move(stmt->expression));
     }
 
     void Interpreter::evaluatePrintStmt(PrintStmt stmt){
-        ExprStmt printStmt = std::move(stmt);
-        LiteralObject value = evaluateExpr(printStmt->expression);
+        LiteralObject value = evaluateExpr(std::move(stmt->expression));
         std::cout << stringify(value) << std::endl;
     }
 }

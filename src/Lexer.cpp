@@ -30,6 +30,7 @@ void Lexer::scanToken(){
         case '*': addToken(TokenType::STAR); break;
         case '/': addToken(TokenType::SLASH); break;
         case ':': addToken(TokenType::COLON); break;
+        case ';': addToken(TokenType::SEMICOLON); break;
         case '!':
             if(match('=')){
                 addToken(TokenType::BANG_EQUAL);
