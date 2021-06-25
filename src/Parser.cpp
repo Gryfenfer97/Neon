@@ -6,13 +6,51 @@ namespace Ne{
     }
 
     std::vector<StmtVariant> Parser::parse(){
-        // return expression();
         std::vector<StmtVariant> statements;
         while (!isAtEnd()) {
-            statements.push_back(statement());
+            statements.push_back(declaration());
         }
 
         return statements; 
+    }
+
+    StmtVariant Parser::declaration(){
+        if(match({TokenType::VAR})) return varDeclaration();
+        return statement();
+    }
+
+    StmtVariant Parser::varDeclaration(){
+        Token name = consume(TokenType::IDENTIFIER, "Excpect variable name.");
+        TokenType type;
+        ExprVariant initializer;
+        bool explicitType = false;
+        if(match({TokenType::COLON})){
+            if(match({TokenType::INT, TokenType::DOUBLE, TokenType::STRING, TokenType::BOOL})){
+                explicitType = true;
+                type = previous().getType();
+            }
+            else{
+                throw std::runtime_error("unrecognized type");
+            }
+        }
+
+        if(match({TokenType::EQUAL})){
+            initializer = expression();
+            if(explicitType){
+                // We check if the both types are the same
+                auto detectedType = std::get<LiteralExpr>(initializer)->getType();
+                if(type !=  std::get<LiteralExpr>(initializer)->getType()){
+                    throw std::runtime_error("Both type does not correspond");
+                }
+            }
+            else{
+                type = std::get<LiteralExpr>(initializer)->getType();
+            }    
+        }
+ 
+        
+        consume(TokenType::SEMICOLON, "Expect ';' after declaration.");
+        return createVarSV(name, type, std::move(initializer));
     }
 
     StmtVariant Parser::statement(){
@@ -22,7 +60,7 @@ namespace Ne{
 
     StmtVariant Parser::printStatement(){
         ExprVariant expr = expression();
-        consume(TokenType::SEMICOLON, "Expect ';' after value.");
+        consume(TokenType::SEMICOLON, "Expect ';' after print statement.");
         return createPrintSV(std::move(expr));
     }
 
@@ -126,6 +164,9 @@ namespace Ne{
         else if(match({TokenType::DOUBLE})){
             return createLiteralEV(std::stod(previous().toString()));
         }
+        else if(match({TokenType::IDENTIFIER})){
+            return createVariableEV(previous());
+        }
         else if(match({TokenType::LEFT_PAREN})){
             ExprVariant expr = expression();
             consume(TokenType::RIGHT_PAREN, "Expect ')' after expression.");
@@ -135,7 +176,7 @@ namespace Ne{
     }
 
     Token Parser::consume(TokenType type, const std::string& message){
-        if(check(type)) return *(++current);
+        if(check(type)) return *(current++);
         throw std::runtime_error(current->toString() + " " + message);
     }
 } // Ne

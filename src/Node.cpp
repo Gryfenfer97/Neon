@@ -12,8 +12,27 @@ Expr::Grouping::Grouping(ExprVariant expression) : expression(std::move(expressi
 Expr::Literal::Literal(const LiteralObject& literal) : literal(literal)
 {}
 
+TokenType Expr::Literal::getType(){
+    switch(literal.index()){
+    case 0: // String
+        return TokenType::STRING;
+    case 1: // Int
+        return TokenType::INT;
+    case 2: // Double
+        return TokenType::DOUBLE;
+    case 3: // Bool
+        return TokenType::BOOL;
+    default:
+        throw std::runtime_error("type not found");
+    }
+}
+
 Expr::Unary::Unary(Token op, ExprVariant right) : 
     op(op), right(std::move(right))
+{}
+
+Expr::Variable::Variable(Token name) : 
+    name(name)
 {}
 
 ExprVariant Ne::createBinaryEV(ExprVariant left, Token op, ExprVariant right){
@@ -32,10 +51,17 @@ ExprVariant Ne::createUnaryEV(Token op, ExprVariant right){
     return std::make_unique<Expr::Unary>(op, std::move(right));
 }
 
+ExprVariant Ne::createVariableEV(Token name){
+    return std::make_unique<Expr::Variable>(name);
+}
+
 Stmt::Expr::Expr(ExprVariant expr) : expression(std::move(expr))
 {}
 
 Stmt::Print::Print(ExprVariant expr) : expression(std::move(expr))
+{}
+
+Stmt::Var::Var(Token name, TokenType type, ExprVariant initializer) : name(name), type(type), initializer(std::move(initializer))
 {}
 
 StmtVariant Ne::createExprSV(ExprVariant expr){
@@ -43,5 +69,9 @@ StmtVariant Ne::createExprSV(ExprVariant expr){
 }
 
 StmtVariant Ne::createPrintSV(ExprVariant expr){
-return std::make_unique<Stmt::Print>(std::move(expr));
+    return std::make_unique<Stmt::Print>(std::move(expr));
+}
+
+StmtVariant Ne::createVarSV(Token name, TokenType type, ExprVariant initializer){
+    return std::make_unique<Stmt::Var>(name, type, std::move(initializer));
 }

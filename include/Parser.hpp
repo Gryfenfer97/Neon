@@ -14,6 +14,8 @@ namespace Ne{
         ExprVariant expression();
         ExprVariant equality();
         bool match(const std::initializer_list<TokenType>& types);
+        [[nodiscard]] StmtVariant declaration();
+        [[nodiscard]] StmtVariant varDeclaration();
         [[nodiscard]] StmtVariant statement();
         [[nodiscard]] StmtVariant printStatement();
         [[nodiscard]] StmtVariant expressionStatement();

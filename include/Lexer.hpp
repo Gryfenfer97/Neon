@@ -17,7 +17,7 @@ namespace Ne{
         LESS, LESS_EQUAL,
 
         // Literals.
-        IDENTIFIER, STRING, INT, DOUBLE,
+        IDENTIFIER, STRING, INT, DOUBLE, BOOL,
 
         // Keywords.
         AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
@@ -36,6 +36,10 @@ namespace Ne{
         {"if", TokenType::IF},
         {"nil", TokenType::NIL},
         {"or", TokenType::OR},
+        {"string", TokenType::STRING},
+        {"int", TokenType::INT},
+        {"double", TokenType::DOUBLE},
+        {"bool", TokenType::BOOL},
         {"print", TokenType::PRINT},
         {"return", TokenType::RETURN},
         {"this", TokenType::THIS},
