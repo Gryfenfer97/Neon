@@ -4,11 +4,33 @@
     "request": "launch",
     "program": "./Neon",
     "args": [],
+    "stopAtEntry": true,
     "environment": [{ "name": "config", "value": "Debug" }],
     "cwd": "${workspaceFolder}/build",
     "showDisplayString": true,
     "MIMode": "gdb",
-    "miDebuggerPath": "/usr/bin/gdb"
+    "miDebuggerPath": "/usr/bin/gdb",
+    "configurations": [
+    {
+      "name": "(gdb) Lancer",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/Neon",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/build",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Activer l'impression en mode Pretty pour gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          }
+      ]
+    }
+    ]
   }
   
   
