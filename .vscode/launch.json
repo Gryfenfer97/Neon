@@ -6,7 +6,9 @@
     "args": [],
     "environment": [{ "name": "config", "value": "Debug" }],
     "cwd": "${workspaceFolder}/build",
-    "showDisplayString": true
+    "showDisplayString": true,
+    "MIMode": "gdb",
+    "miDebuggerPath": "/usr/bin/gdb"
   }
   
   
