@@ -115,7 +115,7 @@ void Lexer::identifier(){
     }else{
         type = keywords.at(text);
     }
-    addToken(type);
+    addToken(type, text);
 }
 
 bool Lexer::isAlpha(char c){

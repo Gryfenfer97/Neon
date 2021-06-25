@@ -6,7 +6,7 @@
 #include <Parser.hpp>
 #include <Interpreter.hpp>
 
-void run(const std::string &code)
+void run(const std::string &code, Ne::Interpreter& interpreter)
 {
     Ne::Lexer lexer{code};
     std::vector<Ne::Token> tokens = lexer.scanTokens();
@@ -19,7 +19,7 @@ void run(const std::string &code)
     auto statements = parser.parse();
     // std::cout << Ne::toString(expr) << std::endl;
 
-    Ne::Interpreter interpreter;
+    
     interpreter.evaluateStmts(statements);
     // std::cout << interpreter.stringify(obj) << std::endl;
 }
@@ -42,11 +42,13 @@ std::string readFile(std::string_view path)
 
 void runFile(const std::string &path)
 {
-    run(readFile(path));
+    Ne::Interpreter interpreter;
+    run(readFile(path), interpreter);
 }
 
 void runPrompt()
 {
+    Ne::Interpreter interpreter;
     for (;;)
     {
         std::cout << "> ";
@@ -55,7 +57,7 @@ void runPrompt()
         if (line == "exit" || line == "quit")
             break;
         // std::cout << "line : " << line << std::endl;
-        run(line);
+        run(line, interpreter);
     }
 }
 

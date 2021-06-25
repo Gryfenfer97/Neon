@@ -57,7 +57,7 @@ namespace Ne{
             m_line = line;
         }
 
-        std::string toString(){
+        std::string toString() const{
             return m_lexme;
         }
 

@@ -11,6 +11,8 @@ namespace Ne{
             return evaluateLiteral(std::move(std::get<LiteralExpr>(expr)));
         case 3: // Unary
             return evaluateUnary(std::move(std::get<UnaryExpr>(expr)));
+        case 4: // Variable
+            return evaluateVariable(std::move(std::get<VariableExpr>(expr)));
         default:
             return "";
         }
@@ -27,6 +29,9 @@ namespace Ne{
             }
             case 1: // Print
                 evaluatePrintStmt(std::move(std::get<PrintStmt>(stmt)));
+                break;
+            case 2: // Var
+                evaluateVarStmt(std::move(std::get<VarStmt>(stmt)));
                 break;
             }
            
@@ -115,6 +120,10 @@ namespace Ne{
         return right;
     }
 
+    LiteralObject Interpreter::evaluateVariable(VariableExpr expr){
+        return environment.get(std::move(expr->name));
+    }
+
     std::string Interpreter::stringify(LiteralObject obj){
         switch(obj.index()){
         case 0: //string
@@ -136,5 +145,12 @@ namespace Ne{
     void Interpreter::evaluatePrintStmt(PrintStmt stmt){
         LiteralObject value = evaluateExpr(std::move(stmt->expression));
         std::cout << stringify(value) << std::endl;
+    }
+
+    void Interpreter::evaluateVarStmt(VarStmt stmt){
+        LiteralObject value;
+        value = evaluateExpr(std::move(stmt->initializer));
+        environment.define(stmt->name.toString(), value);
+
     }
 }
