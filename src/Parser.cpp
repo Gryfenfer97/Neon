@@ -55,6 +55,7 @@ namespace Ne{
 
     StmtVariant Parser::statement(){
         if(match({TokenType::PRINT})) return printStatement();
+        if(match({TokenType::LEFT_BRACE})) return createBlockSV(block());
         return expressionStatement();
     }
 
@@ -62,6 +63,16 @@ namespace Ne{
         ExprVariant expr = expression();
         consume(TokenType::SEMICOLON, "Expect ';' after print statement.");
         return createPrintSV(std::move(expr));
+    }
+
+    std::vector<StmtVariant> Parser::block(){
+        std::vector<StmtVariant> statements;
+
+        while(!check(TokenType::RIGHT_BRACE) && !isAtEnd()){
+            statements.push_back(declaration());
+        }
+        consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
     }
 
     StmtVariant Parser::expressionStatement(){

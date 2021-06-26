@@ -33,6 +33,9 @@ namespace Ne{
             case 2: // Var
                 evaluateVarStmt(std::move(std::get<VarStmt>(stmt)));
                 break;
+            case 3: // Block
+                evaluateBlockStmt(std::move(std::get<BlockStmt>(stmt)));
+                break;
             }
            
         }
@@ -151,6 +154,14 @@ namespace Ne{
         LiteralObject value;
         value = evaluateExpr(std::move(stmt->initializer));
         environment.define(stmt->name.toString(), value);
+    }
 
+    void Interpreter::evaluateBlockStmt(BlockStmt stmt){
+        executeBlock(std::move(stmt->statements), std::make_shared<Environment>(environment));
+    }
+
+    void Interpreter::executeBlock(std::vector<StmtVariant> statements, std::shared_ptr<Environment> environment){
+        std::shared_ptr<Environment> previous = environment;
+        evaluateStmts(statements);
     }
 }

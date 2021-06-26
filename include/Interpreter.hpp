@@ -17,6 +17,9 @@ namespace Ne{
         void evaluateExprStmt(ExprStmt stmt);
         void evaluatePrintStmt(PrintStmt stmt);
         void evaluateVarStmt(VarStmt stmt);
+        void evaluateBlockStmt(BlockStmt stmt);
+
+        void executeBlock(std::vector<StmtVariant> statements, std::shared_ptr<Environment> environment);
 
     private:
         Environment environment;

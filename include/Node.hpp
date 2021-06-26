@@ -63,13 +63,15 @@ namespace Ne{
         struct Expr;
         struct Print;
         struct Var;
+        struct Block;
     }
 
     using ExprStmt = std::unique_ptr<Stmt::Expr>;
     using PrintStmt = std::unique_ptr<Stmt::Print>;
     using VarStmt = std::unique_ptr<Stmt::Var>;
+    using BlockStmt = std::unique_ptr<Stmt::Block>;
 
-    using StmtVariant = std::variant<ExprStmt, PrintStmt, VarStmt>;
+    using StmtVariant = std::variant<ExprStmt, PrintStmt, VarStmt, BlockStmt>;
 
     struct Stmt::Expr{
         ExprVariant expression;
@@ -81,15 +83,21 @@ namespace Ne{
         Print(ExprVariant expr);
     };
 
-     struct Stmt::Var{
+    struct Stmt::Var{
         Token name;
         TokenType type;
         ExprVariant initializer;
         Var(Token name, TokenType type, ExprVariant initializer);
     };
 
+    struct Stmt::Block{
+        std::vector<StmtVariant> statements;
+        Block(std::vector<StmtVariant> statements);
+    };
+
     StmtVariant createExprSV(ExprVariant expr);
     StmtVariant createPrintSV(ExprVariant expr);
     StmtVariant createVarSV(Token name, TokenType type, ExprVariant initializer);
+    StmtVariant createBlockSV(std::vector<StmtVariant> statements);
 
 }

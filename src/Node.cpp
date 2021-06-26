@@ -64,6 +64,9 @@ Stmt::Print::Print(ExprVariant expr) : expression(std::move(expr))
 Stmt::Var::Var(Token name, TokenType type, ExprVariant initializer) : name(name), type(type), initializer(std::move(initializer))
 {}
 
+Stmt::Block::Block(std::vector<StmtVariant> statements) : statements(std::move(statements))
+{}
+
 StmtVariant Ne::createExprSV(ExprVariant expr){
     return std::make_unique<Stmt::Expr>(std::move(expr));
 }
@@ -74,4 +77,8 @@ StmtVariant Ne::createPrintSV(ExprVariant expr){
 
 StmtVariant Ne::createVarSV(Token name, TokenType type, ExprVariant initializer){
     return std::make_unique<Stmt::Var>(name, type, std::move(initializer));
+}
+
+StmtVariant Ne::createBlockSV(std::vector<StmtVariant> statements){
+    return std::make_unique<Stmt::Block>(std::move(statements));
 }
