@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <sstream>
+#include <string>
 #include <Lexer.hpp>
 #include <AstPrinter.hpp>
 #include <Parser.hpp>
@@ -24,20 +26,20 @@ void run(const std::string &code, Ne::Interpreter& interpreter)
     // std::cout << interpreter.stringify(obj) << std::endl;
 }
 
-std::string readFile(std::string_view path)
+std::string readFile(std::string path)
 {
-    constexpr auto read_size = std::size_t{4096};
-    auto stream = std::ifstream{path.data()};
-    stream.exceptions(std::ios_base::badbit);
-
-    auto out = std::string{};
-    auto buf = std::string(read_size, '\0');
-    while (stream.read(&buf[0], read_size))
+    std::ifstream file{ path };
+    if ( file )
     {
-        out.append(buf, 0, stream.gcount());
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        file.close();
+        return buffer.str();
     }
-    out.append(buf, 0, stream.gcount());
-    return out;
+    else 
+    {
+        throw std::runtime_error("file not found!");
+    }
 }
 
 void runFile(const std::string &path)
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
     }
     else if (argc == 2)
     {
-        runFile(argv[0]);
+        runFile(argv[1]);
     }
     else
     {

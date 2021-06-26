@@ -16,7 +16,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/build/Neon",
-      "args": [],
+      "args": ["program.ne"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/build",
       "environment": [],
