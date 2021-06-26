@@ -18,6 +18,7 @@ namespace Ne{
         [[nodiscard]] StmtVariant declaration();
         [[nodiscard]] StmtVariant varDeclaration();
         [[nodiscard]] StmtVariant statement();
+        [[nodiscard]] StmtVariant ifStatement();
         [[nodiscard]] StmtVariant printStatement();
         [[nodiscard]] std::vector<StmtVariant> block();
         [[nodiscard]] StmtVariant expressionStatement();

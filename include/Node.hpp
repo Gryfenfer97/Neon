@@ -3,6 +3,7 @@
 #include <variant>
 #include <iostream>
 #include <memory>
+#include <optional>
 
 namespace Ne{
     namespace Expr{
@@ -73,14 +74,16 @@ namespace Ne{
         struct Print;
         struct Var;
         struct Block;
+        struct If;
     }
 
     using ExprStmt = std::unique_ptr<Stmt::Expr>;
     using PrintStmt = std::unique_ptr<Stmt::Print>;
     using VarStmt = std::unique_ptr<Stmt::Var>;
     using BlockStmt = std::unique_ptr<Stmt::Block>;
+    using IfStmt = std::unique_ptr<Stmt::If>;
 
-    using StmtVariant = std::variant<ExprStmt, PrintStmt, VarStmt, BlockStmt>;
+    using StmtVariant = std::variant<ExprStmt, PrintStmt, VarStmt, BlockStmt, IfStmt>;
 
     struct Stmt::Expr{
         ExprVariant expression;
@@ -104,9 +107,17 @@ namespace Ne{
         Block(std::vector<StmtVariant> statements);
     };
 
+    struct Stmt::If{
+        ExprVariant condition;
+        StmtVariant thenBranch;
+        std::optional<StmtVariant> elseBranch;
+        If(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch);
+    };
+
     StmtVariant createExprSV(ExprVariant expr);
     StmtVariant createPrintSV(ExprVariant expr);
     StmtVariant createVarSV(Token name, TokenType type, ExprVariant initializer);
     StmtVariant createBlockSV(std::vector<StmtVariant> statements);
+    StmtVariant createIfSV(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch);
 
 }

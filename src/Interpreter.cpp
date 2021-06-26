@@ -22,8 +22,12 @@ namespace Ne{
     
     void Interpreter::evaluateStmts(std::vector<StmtVariant>& statements){
         for(auto& stmt : statements){
-            std::optional<LiteralObject> result;
-            switch(stmt.index()){
+            evaluateStmt(stmt);
+        }
+    }
+
+    void Interpreter::evaluateStmt(StmtVariant& stmt){
+        switch(stmt.index()){
             case 0: // Expression
             {
                 evaluateExprStmt(std::move(std::get<ExprStmt>(stmt)));
@@ -38,9 +42,10 @@ namespace Ne{
             case 3: // Block
                 evaluateBlockStmt(std::move(std::get<BlockStmt>(stmt)));
                 break;
+            case 4: // If
+                evaluateIfStmt(std::move(std::get<IfStmt>(stmt)));
+                break;
             }
-           
-        }
     }
 
 
@@ -173,5 +178,24 @@ namespace Ne{
     void Interpreter::executeBlock(std::vector<StmtVariant> statements, std::shared_ptr<Environment> environment){
         std::shared_ptr<Environment> previous = environment;
         evaluateStmts(statements);
+    }
+
+    void Interpreter::evaluateIfStmt(IfStmt stmt){
+        LiteralObject condition = evaluateExpr(std::move(stmt->condition));
+        switch(condition.index()){
+        case 3: // BOOL
+            break;
+        default:
+            throw std::runtime_error("the condition has to be a boolean");
+        }
+        if(std::get<3>(condition)){
+            evaluateStmt(stmt->thenBranch);
+        }
+        else{
+            if(stmt->elseBranch.has_value()){
+                 evaluateStmt(stmt->elseBranch.value());
+            }
+        }
+
     }
 }

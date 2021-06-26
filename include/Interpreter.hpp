@@ -15,10 +15,12 @@ namespace Ne{
         std::string stringify(LiteralObject obj);
         LiteralObject evaluateExpr(ExprVariant expr);
         void evaluateStmts(std::vector<StmtVariant>& statements);
+        void evaluateStmt(StmtVariant& statement);
         void evaluateExprStmt(ExprStmt stmt);
         void evaluatePrintStmt(PrintStmt stmt);
         void evaluateVarStmt(VarStmt stmt);
         void evaluateBlockStmt(BlockStmt stmt);
+        void evaluateIfStmt(IfStmt stmt);
 
         void executeBlock(std::vector<StmtVariant> statements, std::shared_ptr<Environment> environment);
 

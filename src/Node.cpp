@@ -77,6 +77,10 @@ Stmt::Var::Var(Token name, TokenType type, ExprVariant initializer) : name(name)
 Stmt::Block::Block(std::vector<StmtVariant> statements) : statements(std::move(statements))
 {}
 
+Stmt::If::If(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch) : 
+    condition(std::move(condition)), thenBranch(std::move(thenBranch)), elseBranch(std::move(elseBranch))
+{}
+
 StmtVariant Ne::createExprSV(ExprVariant expr){
     return std::make_unique<Stmt::Expr>(std::move(expr));
 }
@@ -91,4 +95,8 @@ StmtVariant Ne::createVarSV(Token name, TokenType type, ExprVariant initializer)
 
 StmtVariant Ne::createBlockSV(std::vector<StmtVariant> statements){
     return std::make_unique<Stmt::Block>(std::move(statements));
+}
+
+StmtVariant Ne::createIfSV(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch){
+    return std::make_unique<Stmt::If>(std::move(condition), std::move(thenBranch), std::move(elseBranch));
 }

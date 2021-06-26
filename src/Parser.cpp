@@ -1,4 +1,5 @@
 #include <Parser.hpp>
+#include <optional>
 
 namespace Ne{
     Parser::Parser(const std::vector<Token>& tokens) : tokens(tokens){
@@ -39,7 +40,7 @@ namespace Ne{
             if(explicitType){
                 // We check if the both types are the same
                 auto detectedType = std::get<LiteralExpr>(initializer)->getType();
-                if(type !=  std::get<LiteralExpr>(initializer)->getType()){
+                if(type != detectedType){
                     throw std::runtime_error("Both type does not correspond");
                 }
             }
@@ -76,9 +77,23 @@ namespace Ne{
     }
 
     StmtVariant Parser::statement(){
+        if(match({TokenType::IF})) return ifStatement();
         if(match({TokenType::PRINT})) return printStatement();
         if(match({TokenType::LEFT_BRACE})) return createBlockSV(block());
         return expressionStatement();
+    }
+
+    StmtVariant Parser::ifStatement(){
+        consume(TokenType::LEFT_PAREN, "Expect '(' after 'if'.");
+        ExprVariant condition = expression();
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
+
+        StmtVariant thenBranch = statement();
+        std::optional<StmtVariant> elseBranch = {};
+        if(match({TokenType::ELSE}))
+            elseBranch = statement();
+
+        return createIfSV(std::move(condition), std::move(thenBranch), std::move(elseBranch));
     }
 
     StmtVariant Parser::printStatement(){
@@ -200,8 +215,8 @@ namespace Ne{
     }
 
     ExprVariant Parser::primary(){
-        if(match({TokenType::FALSE})) return createLiteralEV("false");
-        else if(match({TokenType::TRUE})) return createLiteralEV("true");
+        if(match({TokenType::FALSE})) return createLiteralEV(false);
+        else if(match({TokenType::TRUE})) return createLiteralEV(true);
         else if(match({TokenType::NIL})) return createLiteralEV("nil");
         else if(match({TokenType::STRING})){
             return createLiteralEV(previous().toString());
