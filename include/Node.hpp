@@ -23,7 +23,7 @@ namespace Ne{
 
     using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr, AssignExpr>;
 
-    using LiteralObject = std::variant<std::string, int, double, bool>;
+    using LiteralObject = std::variant<std::string, int, double, bool, nullptr_t>;
 
     struct Expr::Binary{
         ExprVariant left;

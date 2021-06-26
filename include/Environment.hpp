@@ -6,6 +6,13 @@
 namespace Ne
 {
 
+    namespace Env{
+        struct Variable{
+            TokenType type;
+            
+        };
+    }
+
     class Environment
     {
     public:

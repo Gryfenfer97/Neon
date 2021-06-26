@@ -29,8 +29,11 @@ namespace Ne{
                 case 2: // double
                     text = std::to_string(std::get<double>(literalExpr->literal));
                     break;
-                case 3: // double
+                case 3: // bool
                     text = std::get<bool>(literalExpr->literal) ? "True" : "False";
+                    break;
+                case 4: // nullptr_t
+                    text = "Nil";
                     break;
                 }
                 break;

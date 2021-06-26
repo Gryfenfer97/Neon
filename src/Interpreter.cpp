@@ -145,6 +145,8 @@ namespace Ne{
             return std::to_string(std::get<double>(obj));
         case 3: // bool 
             return std::get<bool>(obj) ? "True" : "False";
+        case 4: // nil (nullptr_t)
+            return "Nil";
         }
         return "";
     }

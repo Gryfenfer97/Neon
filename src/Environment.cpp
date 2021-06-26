@@ -22,7 +22,7 @@ namespace Ne{
 
     void Environment::assign(const Token& name, LiteralObject value){
         if(isVarExist(name.toString())){
-            if(values[name.toString()].index() == value.index())
+            if(values[name.toString()].index() == value.index() || values[name.toString()].index() == 4) // 4 is nullptr_t (NIL)
                 values[name.toString()] = value;
             else
                 throw std::runtime_error("error: implicit conversion");

@@ -47,6 +47,28 @@ namespace Ne{
                 type = std::get<LiteralExpr>(initializer)->getType();
             }    
         }
+        else{
+            if(explicitType){
+                switch(type){
+                case TokenType::STRING:
+                    initializer = createLiteralEV("");
+                    break;
+                case TokenType::INT:
+                    initializer = createLiteralEV(0);
+                    break;
+                case TokenType::DOUBLE:
+                    initializer = createLiteralEV(0.);
+                    break;
+                case TokenType::BOOL:
+                    initializer = createLiteralEV(false);
+                    break;
+                }
+            }
+            else{
+                initializer = createLiteralEV(nullptr);
+                type = TokenType::NIL;
+            }
+        }
  
         
         consume(TokenType::SEMICOLON, "Expect ';' after declaration.");

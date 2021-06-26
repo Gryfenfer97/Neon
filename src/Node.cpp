@@ -22,6 +22,8 @@ TokenType Expr::Literal::getType(){
         return TokenType::DOUBLE;
     case 3: // Bool
         return TokenType::BOOL;
+    case 4: // NIL (nullptr_t)
+        return TokenType::NIL;
     default:
         throw std::runtime_error("type not found");
     }
