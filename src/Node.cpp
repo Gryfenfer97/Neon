@@ -35,6 +35,10 @@ Expr::Variable::Variable(Token name) :
     name(name)
 {}
 
+Expr::Assign::Assign(Token name, ExprVariant value) : 
+    name(name), value(std::move(value))
+{}
+
 ExprVariant Ne::createBinaryEV(ExprVariant left, Token op, ExprVariant right){
     return std::make_unique<Expr::Binary>(std::move(left), op, std::move(right));
 }
@@ -53,6 +57,10 @@ ExprVariant Ne::createUnaryEV(Token op, ExprVariant right){
 
 ExprVariant Ne::createVariableEV(Token name){
     return std::make_unique<Expr::Variable>(name);
+}
+
+ExprVariant Ne::createAssignEV(Token name, ExprVariant value){
+    return std::make_unique<Expr::Assign>(name, std::move(value));
 }
 
 Stmt::Expr::Expr(ExprVariant expr) : expression(std::move(expr))

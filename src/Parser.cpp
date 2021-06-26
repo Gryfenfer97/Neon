@@ -82,7 +82,22 @@ namespace Ne{
     }
 
     ExprVariant Parser::expression(){
-        return equality();
+        // return equality();
+        return assignment();
+    }
+
+    ExprVariant Parser::assignment(){
+        ExprVariant expr = equality();
+        if(match({TokenType::EQUAL})){
+            Token equal = previous();
+            ExprVariant value = assignment();
+            if(std::holds_alternative<VariableExpr>(expr)){
+                Token name = std::get<VariableExpr>(expr)->name;
+                return createAssignEV(name, std::move(value));
+            }
+            throw std::runtime_error(equal.toString() + ": Invalid assignment target.");
+        }
+        return expr;
     }
 
     ExprVariant Parser::equality(){

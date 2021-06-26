@@ -20,6 +20,18 @@ namespace Ne{
         throw std::runtime_error("undefined variable '" + name.toString() + "'.");
     }
 
+    void Environment::assign(const Token& name, LiteralObject value){
+        if(isVarExist(name.toString())){
+            if(values[name.toString()].index() == value.index())
+                values[name.toString()] = value;
+            else
+                throw std::runtime_error("error: implicit conversion");
+        }
+        else{
+            throw std::runtime_error("Undefined variable '" + name.toString() + "'.");
+        }
+    }
+
     bool Environment::isVarExist(const std::string& name){
         if(values.find(name) != values.end()){
             return true;

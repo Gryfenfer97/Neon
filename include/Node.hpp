@@ -11,15 +11,17 @@ namespace Ne{
         struct Literal;
         struct Unary;
         struct Variable;
+        struct Assign;
     }
     
     using BinaryExpr = std::unique_ptr<Expr::Binary>; 
     using GroupingExpr = std::unique_ptr<Expr::Grouping>; 
     using LiteralExpr = std::unique_ptr<Expr::Literal>; 
     using UnaryExpr = std::unique_ptr<Expr::Unary>; 
-    using VariableExpr = std::unique_ptr<Expr::Variable>; 
+    using VariableExpr = std::unique_ptr<Expr::Variable>;
+    using AssignExpr = std::unique_ptr<Expr::Assign>; 
 
-    using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr>;
+    using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr, AssignExpr>;
 
     using LiteralObject = std::variant<std::string, int, double, bool>;
 
@@ -52,11 +54,18 @@ namespace Ne{
         Variable(Token name);
     };
 
+    struct Expr::Assign{
+        Token name;
+        ExprVariant value;
+        Assign(Token name, ExprVariant value);
+    };
+
     ExprVariant createBinaryEV(ExprVariant left, Token op, ExprVariant right);
     ExprVariant createGroupingEV(ExprVariant expression);
     ExprVariant createLiteralEV(const LiteralObject& literal);
     ExprVariant createUnaryEV(Token op, ExprVariant right);
     ExprVariant createVariableEV(Token name);
+    ExprVariant createAssignEV(Token name, ExprVariant value);
 
     // Statements
     namespace Stmt{

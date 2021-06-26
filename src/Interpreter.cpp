@@ -13,6 +13,8 @@ namespace Ne{
             return evaluateUnary(std::move(std::get<UnaryExpr>(expr)));
         case 4: // Variable
             return evaluateVariable(std::move(std::get<VariableExpr>(expr)));
+        case 5: // Variable
+            return evaluateAssign(std::move(std::get<AssignExpr>(expr)));
         default:
             return "";
         }
@@ -125,6 +127,12 @@ namespace Ne{
 
     LiteralObject Interpreter::evaluateVariable(VariableExpr expr){
         return environment.get(std::move(expr->name));
+    }
+
+    LiteralObject Interpreter::evaluateAssign(AssignExpr expr){
+        LiteralObject value = evaluateExpr(std::move(expr->value));
+        environment.assign(expr->name, value);
+        return value;
     }
 
     std::string Interpreter::stringify(LiteralObject obj){
