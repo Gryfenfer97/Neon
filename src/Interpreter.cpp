@@ -94,6 +94,31 @@ namespace Ne{
                 return std::get<bool>(left) != std::get<bool>(right);
             if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
                 return std::get<int>(left) != std::get<int>(right);
+
+        // Comparison        
+        case TokenType::LESS:
+            if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
+                return std::get<int>(left) < std::get<int>(right);
+            if(std::holds_alternative<double>(left) && std::holds_alternative<double>(right))
+                return std::get<double>(left) < std::get<double>(right);
+
+        case TokenType::LESS_EQUAL:
+            if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
+                return std::get<int>(left) <= std::get<int>(right);
+            if(std::holds_alternative<double>(left) && std::holds_alternative<double>(right))
+                return std::get<double>(left) <= std::get<double>(right);
+        
+        case TokenType::GREATER:
+            if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
+                return std::get<int>(left) > std::get<int>(right);
+            if(std::holds_alternative<double>(left) && std::holds_alternative<double>(right))
+                return std::get<double>(left) > std::get<double>(right);
+
+        case TokenType::GREATER_EQUAL:
+            if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
+                return std::get<int>(left) >= std::get<int>(right);
+            if(std::holds_alternative<double>(left) && std::holds_alternative<double>(right))
+                return std::get<double>(left) >= std::get<double>(right);
         }
         return "";
     }

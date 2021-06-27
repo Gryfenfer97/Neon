@@ -45,6 +45,20 @@ void Lexer::scanToken(){
                 addToken(TokenType::EQUAL);
             }
             break;
+        case '>':
+            if(match('=')){
+                addToken(TokenType::GREATER_EQUAL);
+            }else{
+                addToken(TokenType::GREATER);
+            }
+            break;
+        case '<':
+            if(match('=')){
+                addToken(TokenType::LESS_EQUAL);
+            }else{
+                addToken(TokenType::LESS);
+            }
+            break;
         case '|':
             if(match('|')) addToken(TokenType::OR);
             break;
