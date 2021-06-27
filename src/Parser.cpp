@@ -97,7 +97,9 @@ namespace Ne{
     }
 
     StmtVariant Parser::printStatement(){
+        consume(TokenType::LEFT_PAREN, "Expect '(' after 'print'.");
         ExprVariant expr = expression();
+        consume(TokenType::RIGHT_PAREN, "Expect ')' at the end of 'print'.");
         consume(TokenType::SEMICOLON, "Expect ';' after print statement.");
         return createPrintSV(std::move(expr));
     }
