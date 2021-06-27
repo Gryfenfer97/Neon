@@ -1,22 +1,22 @@
 #include <Interpreter.hpp>
 
 namespace Ne{
-    LiteralObject Interpreter::evaluateExpr(ExprVariant expr){
+    LiteralObject Interpreter::evaluateExpr(ExprVariant& expr){
         switch(expr.index()){
         case 0: // Binary
-            return evaluateBinary(std::move(std::get<BinaryExpr>(expr)));
+            return evaluateBinary(std::get<BinaryExpr>(expr));
         case 1: // Grouping
-            return evaluateGrouping(std::move(std::get<GroupingExpr>(expr)));
+            return evaluateGrouping(std::get<GroupingExpr>(expr));
         case 2: // Literal
-            return evaluateLiteral(std::move(std::get<LiteralExpr>(expr)));
+            return evaluateLiteral(std::get<LiteralExpr>(expr));
         case 3: // Unary
-            return evaluateUnary(std::move(std::get<UnaryExpr>(expr)));
+            return evaluateUnary(std::get<UnaryExpr>(expr));
         case 4: // Variable
-            return evaluateVariable(std::move(std::get<VariableExpr>(expr)));
+            return evaluateVariable(std::get<VariableExpr>(expr));
         case 5: // Variable
-            return evaluateAssign(std::move(std::get<AssignExpr>(expr)));
+            return evaluateAssign(std::get<AssignExpr>(expr));
         case 6: // Logical
-            return evaluateLogical(std::move(std::get<LogicalExpr>(expr)));
+            return evaluateLogical(std::get<LogicalExpr>(expr));
         default:
             return "";
         }
@@ -31,30 +31,31 @@ namespace Ne{
     void Interpreter::evaluateStmt(StmtVariant& stmt){
         switch(stmt.index()){
             case 0: // Expression
-            {
-                evaluateExprStmt(std::move(std::get<ExprStmt>(stmt)));
+                evaluateExprStmt(std::get<ExprStmt>(stmt));
                 break;
-            }
             case 1: // Print
-                evaluatePrintStmt(std::move(std::get<PrintStmt>(stmt)));
+                evaluatePrintStmt(std::get<PrintStmt>(stmt));
                 break;
             case 2: // Var
-                evaluateVarStmt(std::move(std::get<VarStmt>(stmt)));
+                evaluateVarStmt(std::get<VarStmt>(stmt));
                 break;
             case 3: // Block
-                evaluateBlockStmt(std::move(std::get<BlockStmt>(stmt)));
+                evaluateBlockStmt(std::get<BlockStmt>(stmt));
                 break;
             case 4: // If
-                evaluateIfStmt(std::move(std::get<IfStmt>(stmt)));
+                evaluateIfStmt(std::get<IfStmt>(stmt));
+                break;
+            case 5: // If
+                evaluateWhileStmt(std::get<WhileStmt>(stmt));
                 break;
             }
     }
 
 
-    LiteralObject Interpreter::evaluateBinary(ExprVariant expr){
-        BinaryExpr exprBinary = std::move(std::get<BinaryExpr>(expr));
-        LiteralObject left = evaluateExpr(std::move(exprBinary->left));
-        LiteralObject right = evaluateExpr(std::move(exprBinary->right));
+    LiteralObject Interpreter::evaluateBinary(BinaryExpr& expr){
+        BinaryExpr& exprBinary = expr;
+        LiteralObject left = evaluateExpr(exprBinary->left);
+        LiteralObject right = evaluateExpr(exprBinary->right);
         switch(exprBinary->op.getType()){
         case TokenType::PLUS:
             if(std::holds_alternative<int>(left) && std::holds_alternative<int>(right))
@@ -97,19 +98,19 @@ namespace Ne{
         return "";
     }
 
-    LiteralObject Interpreter::evaluateGrouping(ExprVariant expr){
-        GroupingExpr exprGrouping = std::move(std::get<GroupingExpr>(expr));
-        return evaluateExpr(std::move(exprGrouping->expression));
+    LiteralObject Interpreter::evaluateGrouping(GroupingExpr& expr){
+        GroupingExpr& exprGrouping = expr;
+        return evaluateExpr(exprGrouping->expression);
     }
 
-    LiteralObject Interpreter::evaluateLiteral(ExprVariant expr){
-        LiteralExpr exprLiteral = std::move(std::get<LiteralExpr>(expr));
+    LiteralObject Interpreter::evaluateLiteral(LiteralExpr& expr){
+        LiteralExpr& exprLiteral = expr;
         return exprLiteral->literal;
     }
 
-    LiteralObject Interpreter::evaluateUnary(ExprVariant expr){
-        UnaryExpr exprUnary = std::move(std::get<UnaryExpr>(expr));
-        LiteralObject right = evaluateExpr(std::move(exprUnary->right));
+    LiteralObject Interpreter::evaluateUnary(UnaryExpr& expr){
+        UnaryExpr& exprUnary = expr;
+        LiteralObject right = evaluateExpr(exprUnary->right);
         switch(right.index()){
         case 0: // string
             std::runtime_error("symbol minus before string");
@@ -132,19 +133,19 @@ namespace Ne{
         return right;
     }
 
-    LiteralObject Interpreter::evaluateVariable(VariableExpr expr){
-        return environment.get(std::move(expr->name));
+    LiteralObject Interpreter::evaluateVariable(VariableExpr& expr){
+        return environment.get(expr->name);
     }
 
-    LiteralObject Interpreter::evaluateAssign(AssignExpr expr){
-        LiteralObject value = evaluateExpr(std::move(expr->value));
+    LiteralObject Interpreter::evaluateAssign(AssignExpr& expr){
+        LiteralObject value = evaluateExpr(expr->value);
         environment.assign(expr->name, value);
         return value;
     }
 
-    LiteralObject Interpreter::evaluateLogical(LogicalExpr expr){
-        LiteralObject left = evaluateExpr(std::move(expr->left));
-        LiteralObject right = evaluateExpr(std::move(expr->right));
+    LiteralObject Interpreter::evaluateLogical(LogicalExpr& expr){
+        LiteralObject left = evaluateExpr(expr->left);
+        LiteralObject right = evaluateExpr(expr->right);
         if(left.index() != right.index())
             throw std::runtime_error("the condition logical op has to be a boolean");
         switch(left.index()){
@@ -180,32 +181,32 @@ namespace Ne{
         return "";
     }
 
-    void Interpreter::evaluateExprStmt(ExprStmt stmt){
-        evaluateExpr(std::move(stmt->expression));
+    void Interpreter::evaluateExprStmt(ExprStmt& stmt){
+        evaluateExpr(stmt->expression);
     }
 
-    void Interpreter::evaluatePrintStmt(PrintStmt stmt){
-        LiteralObject value = evaluateExpr(std::move(stmt->expression));
+    void Interpreter::evaluatePrintStmt(PrintStmt& stmt){
+        LiteralObject value = evaluateExpr(stmt->expression);
         std::cout << stringify(value) << std::endl;
     }
 
-    void Interpreter::evaluateVarStmt(VarStmt stmt){
+    void Interpreter::evaluateVarStmt(VarStmt& stmt){
         LiteralObject value;
-        value = evaluateExpr(std::move(stmt->initializer));
+        value = evaluateExpr(stmt->initializer);
         environment.define(stmt->name.toString(), value);
     }
 
-    void Interpreter::evaluateBlockStmt(BlockStmt stmt){
-        executeBlock(std::move(stmt->statements), std::make_shared<Environment>(environment));
+    void Interpreter::evaluateBlockStmt(BlockStmt& stmt){
+        executeBlock(stmt->statements, std::make_shared<Environment>(environment));
     }
 
-    void Interpreter::executeBlock(std::vector<StmtVariant> statements, std::shared_ptr<Environment> environment){
+    void Interpreter::executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> environment){
         std::shared_ptr<Environment> previous = environment;
         evaluateStmts(statements);
     }
 
-    void Interpreter::evaluateIfStmt(IfStmt stmt){
-        LiteralObject condition = evaluateExpr(std::move(stmt->condition));
+    void Interpreter::evaluateIfStmt(IfStmt& stmt){
+        LiteralObject condition = evaluateExpr(stmt->condition);
         switch(condition.index()){
         case 3: // BOOL
             break;
@@ -220,6 +221,18 @@ namespace Ne{
                  evaluateStmt(stmt->elseBranch.value());
             }
         }
+    }
 
+    void Interpreter::evaluateWhileStmt(WhileStmt& stmt){
+        LiteralObject condition = evaluateExpr(stmt->condition);
+        switch(condition.index()){
+        case 3: // BOOL
+            break;
+        default:
+            throw std::runtime_error("the condition has to be a boolean in a while loop");
+        }
+        while(std::get<3>(evaluateExpr(stmt->condition))){
+            evaluateStmt(stmt->body);
+        }
     }
 }

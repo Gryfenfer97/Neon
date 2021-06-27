@@ -79,6 +79,7 @@ namespace Ne{
     StmtVariant Parser::statement(){
         if(match({TokenType::IF})) return ifStatement();
         if(match({TokenType::PRINT})) return printStatement();
+        if(match({TokenType::WHILE})) return whileStatement();
         if(match({TokenType::LEFT_BRACE})) return createBlockSV(block());
         return expressionStatement();
     }
@@ -102,6 +103,14 @@ namespace Ne{
         consume(TokenType::RIGHT_PAREN, "Expect ')' at the end of 'print'.");
         consume(TokenType::SEMICOLON, "Expect ';' after print statement.");
         return createPrintSV(std::move(expr));
+    }
+
+    StmtVariant Parser::whileStatement(){
+        consume(TokenType::LEFT_PAREN, "Expect '(' after 'while'.");
+        ExprVariant condition = expression();
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
+        StmtVariant body = statement();
+        return createWhileSV(std::move(condition), std::move(body));
     }
 
     std::vector<StmtVariant> Parser::block(){

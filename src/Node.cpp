@@ -89,6 +89,10 @@ Stmt::If::If(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVa
     condition(std::move(condition)), thenBranch(std::move(thenBranch)), elseBranch(std::move(elseBranch))
 {}
 
+Stmt::While::While(ExprVariant condition, StmtVariant body) : 
+    condition(std::move(condition)), body(std::move(body))    
+{}
+
 StmtVariant Ne::createExprSV(ExprVariant expr){
     return std::make_unique<Stmt::Expr>(std::move(expr));
 }
@@ -107,4 +111,8 @@ StmtVariant Ne::createBlockSV(std::vector<StmtVariant> statements){
 
 StmtVariant Ne::createIfSV(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch){
     return std::make_unique<Stmt::If>(std::move(condition), std::move(thenBranch), std::move(elseBranch));
+}
+
+StmtVariant Ne::createWhileSV(ExprVariant condition, StmtVariant body){
+    return std::make_unique<Stmt::While>(std::move(condition), std::move(body));
 }

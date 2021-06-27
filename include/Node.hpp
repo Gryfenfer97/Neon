@@ -85,6 +85,7 @@ namespace Ne{
         struct Var;
         struct Block;
         struct If;
+        struct While;
     }
 
     using ExprStmt = std::unique_ptr<Stmt::Expr>;
@@ -92,8 +93,9 @@ namespace Ne{
     using VarStmt = std::unique_ptr<Stmt::Var>;
     using BlockStmt = std::unique_ptr<Stmt::Block>;
     using IfStmt = std::unique_ptr<Stmt::If>;
+    using WhileStmt = std::unique_ptr<Stmt::While>;
 
-    using StmtVariant = std::variant<ExprStmt, PrintStmt, VarStmt, BlockStmt, IfStmt>;
+    using StmtVariant = std::variant<ExprStmt, PrintStmt, VarStmt, BlockStmt, IfStmt, WhileStmt>;
 
     struct Stmt::Expr{
         ExprVariant expression;
@@ -124,10 +126,17 @@ namespace Ne{
         If(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch);
     };
 
+    struct Stmt::While{
+        ExprVariant condition;
+        StmtVariant body;
+        While(ExprVariant condition, StmtVariant body);
+    };
+
     StmtVariant createExprSV(ExprVariant expr);
     StmtVariant createPrintSV(ExprVariant expr);
     StmtVariant createVarSV(Token name, TokenType type, ExprVariant initializer);
     StmtVariant createBlockSV(std::vector<StmtVariant> statements);
     StmtVariant createIfSV(ExprVariant condition, StmtVariant thenBranch, std::optional<StmtVariant> elseBranch);
+    StmtVariant createWhileSV(ExprVariant condition, StmtVariant body);
 
 }
