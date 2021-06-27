@@ -13,6 +13,7 @@ namespace Ne{
         struct Unary;
         struct Variable;
         struct Assign;
+        struct Logical;
     }
     
     using BinaryExpr = std::unique_ptr<Expr::Binary>; 
@@ -21,8 +22,9 @@ namespace Ne{
     using UnaryExpr = std::unique_ptr<Expr::Unary>; 
     using VariableExpr = std::unique_ptr<Expr::Variable>;
     using AssignExpr = std::unique_ptr<Expr::Assign>; 
+    using LogicalExpr = std::unique_ptr<Expr::Logical>;
 
-    using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr, AssignExpr>;
+    using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr, AssignExpr, LogicalExpr>;
 
     using LiteralObject = std::variant<std::string, int, double, bool, nullptr_t>;
 
@@ -61,12 +63,20 @@ namespace Ne{
         Assign(Token name, ExprVariant value);
     };
 
+    struct Expr::Logical{
+        ExprVariant left;
+        Token op;
+        ExprVariant right;
+        Logical(ExprVariant left, Token op, ExprVariant right);
+    };
+
     ExprVariant createBinaryEV(ExprVariant left, Token op, ExprVariant right);
     ExprVariant createGroupingEV(ExprVariant expression);
     ExprVariant createLiteralEV(const LiteralObject& literal);
     ExprVariant createUnaryEV(Token op, ExprVariant right);
     ExprVariant createVariableEV(Token name);
     ExprVariant createAssignEV(Token name, ExprVariant value);
+    ExprVariant createLogicalEV(ExprVariant left, Token op, ExprVariant right);
 
     // Statements
     namespace Stmt{

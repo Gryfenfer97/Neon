@@ -45,6 +45,12 @@ void Lexer::scanToken(){
                 addToken(TokenType::EQUAL);
             }
             break;
+        case '|':
+            if(match('|')) addToken(TokenType::OR);
+            break;
+        case '&':
+            if(match('&')) addToken(TokenType::AND);
+            break;
         case '"': string(); break;
         default:
             if(isDigit(*current)){

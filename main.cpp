@@ -19,7 +19,7 @@ void run(const std::string &code, Ne::Interpreter& interpreter)
     // }
     Ne::Parser parser(tokens);
     auto statements = parser.parse();
-    // std::cout << Ne::toString(expr) << std::endl;
+    // std::cout << Ne::toString(statements) << std::endl;
 
     
     interpreter.evaluateStmts(statements);

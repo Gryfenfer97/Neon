@@ -15,6 +15,8 @@ namespace Ne{
             return evaluateVariable(std::move(std::get<VariableExpr>(expr)));
         case 5: // Variable
             return evaluateAssign(std::move(std::get<AssignExpr>(expr)));
+        case 6: // Logical
+            return evaluateLogical(std::move(std::get<LogicalExpr>(expr)));
         default:
             return "";
         }
@@ -138,6 +140,28 @@ namespace Ne{
         LiteralObject value = evaluateExpr(std::move(expr->value));
         environment.assign(expr->name, value);
         return value;
+    }
+
+    LiteralObject Interpreter::evaluateLogical(LogicalExpr expr){
+        LiteralObject left = evaluateExpr(std::move(expr->left));
+        LiteralObject right = evaluateExpr(std::move(expr->right));
+        if(left.index() != right.index())
+            throw std::runtime_error("the condition logical op has to be a boolean");
+        switch(left.index()){
+        case 3: // BOOL
+            break;
+        default:
+            throw std::runtime_error("the condition logical op has to be a boolean");
+        }
+        switch(expr->op.getType()){
+        case TokenType::OR:
+            return std::get<3>(left) || std::get<3>(right);
+        case TokenType::AND:
+            return std::get<3>(left) && std::get<3>(right);
+        default:
+            throw std::runtime_error("operator not recongized.");
+        }
+        
     }
 
     std::string Interpreter::stringify(LiteralObject obj){

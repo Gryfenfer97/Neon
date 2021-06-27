@@ -124,7 +124,7 @@ namespace Ne{
     }
 
     ExprVariant Parser::assignment(){
-        ExprVariant expr = equality();
+        ExprVariant expr = orExpr();
         if(match({TokenType::EQUAL})){
             Token equal = previous();
             ExprVariant value = assignment();
@@ -133,6 +133,26 @@ namespace Ne{
                 return createAssignEV(name, std::move(value));
             }
             throw std::runtime_error(equal.toString() + ": Invalid assignment target.");
+        }
+        return expr;
+    }
+
+    ExprVariant Parser::orExpr(){
+        ExprVariant expr = andExpr();
+        while(match({TokenType::OR})){
+            Token op = previous();
+            ExprVariant right = andExpr();
+            expr = createLogicalEV(std::move(expr), op, std::move(right));
+        }
+        return expr;
+    }
+
+    ExprVariant Parser::andExpr(){
+        ExprVariant expr = equality();
+        while(match({TokenType::AND})){
+            Token op = previous();
+            ExprVariant right = equality();
+            expr = createLogicalEV(std::move(expr), op, std::move(right));
         }
         return expr;
     }

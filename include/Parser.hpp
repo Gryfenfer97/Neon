@@ -13,6 +13,8 @@ namespace Ne{
         std::vector<Token>::iterator current;
         ExprVariant expression();
         ExprVariant assignment();
+        ExprVariant orExpr();
+        ExprVariant andExpr();
         ExprVariant equality();
         bool match(const std::initializer_list<TokenType>& types);
         [[nodiscard]] StmtVariant declaration();
