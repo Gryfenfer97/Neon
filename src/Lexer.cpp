@@ -86,9 +86,9 @@ void Lexer::addToken(TokenType tokenType){
 }
 
 bool Lexer::match(char c){
+    if((current+1) == m_source.end()) return false;
+    if(*(current+1) != c) return false;
     current++;
-    if(current == m_source.end()) return false;
-    if(*current != c) return false;
     return true;
 }
 
