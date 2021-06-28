@@ -152,7 +152,7 @@ namespace Ne{
 
         body = createWhileSV(std::move(condition.value()), std::move(body));
 
-        if(!initializer.has_value()){
+        if(initializer.has_value()){
             std::vector<StmtVariant> statements;
             statements.push_back(std::move(initializer.value()));
             statements.push_back(std::move(body));
