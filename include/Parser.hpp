@@ -23,6 +23,7 @@ namespace Ne{
         [[nodiscard]] StmtVariant ifStatement();
         [[nodiscard]] StmtVariant printStatement();
         [[nodiscard]] StmtVariant whileStatement();
+        [[nodiscard]] StmtVariant forStatement();
         [[nodiscard]] std::vector<StmtVariant> block();
         [[nodiscard]] StmtVariant expressionStatement();
         [[nodiscard]] Token previous();

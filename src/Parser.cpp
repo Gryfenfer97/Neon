@@ -87,6 +87,7 @@ namespace Ne{
         if(match({TokenType::IF})) return ifStatement();
         if(match({TokenType::PRINT})) return printStatement();
         if(match({TokenType::WHILE})) return whileStatement();
+        if(match({TokenType::FOR})) return forStatement();
         if(match({TokenType::LEFT_BRACE})) return createBlockSV(block());
         return expressionStatement();
     }
@@ -118,6 +119,47 @@ namespace Ne{
         consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
         StmtVariant body = statement();
         return createWhileSV(std::move(condition), std::move(body));
+    }
+
+    StmtVariant Parser::forStatement(){
+        consume(TokenType::LEFT_PAREN, "Expect '(' after 'for'.");
+        std::optional<StmtVariant> initializer;
+        if(match({TokenType::SEMICOLON})) initializer = {};
+        else if(match({TokenType::VAR})) initializer = varDeclaration();
+        else initializer = expressionStatement();
+
+        std::optional<ExprVariant> condition = {};
+        if(!check(TokenType::SEMICOLON))
+            condition = expression();
+        consume(TokenType::SEMICOLON, "Expect ';' after loop condition.");
+
+        std::optional<ExprVariant> increment;
+        if(!check(TokenType::RIGHT_PAREN))
+            increment = expression();
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after for clauses.");
+
+        StmtVariant body = statement();
+
+        if(increment.has_value()){
+            std::vector<StmtVariant> statements;
+            statements.push_back(std::move(body));
+            statements.push_back(createExprSV(std::move(increment.value())));
+            body = createBlockSV(std::move(statements));
+        }
+        
+        if(!condition.has_value())
+            condition = createLiteralEV(true);
+
+        body = createWhileSV(std::move(condition.value()), std::move(body));
+
+        if(!initializer.has_value()){
+            std::vector<StmtVariant> statements;
+            statements.push_back(std::move(initializer.value()));
+            statements.push_back(std::move(body));
+            body = createBlockSV(std::move(statements));
+        }
+
+        return body;
     }
 
     std::vector<StmtVariant> Parser::block(){
