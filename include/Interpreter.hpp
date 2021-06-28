@@ -1,5 +1,6 @@
 #pragma once
 #include <Node.hpp>
+#include <memory>
 #include <optional>
 #include <Environment.hpp>
 

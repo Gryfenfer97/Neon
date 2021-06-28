@@ -222,12 +222,15 @@ namespace Ne{
     }
 
     void Interpreter::evaluateBlockStmt(BlockStmt& stmt){
-        executeBlock(stmt->statements, std::make_shared<Environment>(environment));
+        std::shared_ptr<Environment> previous = std::allocate_shared<Environment>(std::allocator<Environment>(), this->environment);
+        executeBlock(stmt->statements, std::make_shared<Environment>(Environment(previous)));
+        this->environment = *previous;
     }
 
-    void Interpreter::executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> environment){
-        std::shared_ptr<Environment> previous = environment;
+    void Interpreter::executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> env){
+        this->environment = *env;
         evaluateStmts(statements);
+        this->environment.clear();
     }
 
     void Interpreter::evaluateIfStmt(IfStmt& stmt){

@@ -39,13 +39,20 @@ namespace Ne{
             initializer = expression();
             if(explicitType){
                 // We check if the both types are the same
-                auto detectedType = std::get<LiteralExpr>(initializer)->getType();
-                if(type != detectedType){
-                    throw std::runtime_error("Both type does not correspond");
+                if(std::holds_alternative<LiteralExpr>(initializer)){
+                    auto detectedType = std::get<LiteralExpr>(initializer)->getType();
+                    if(type != detectedType){
+                        throw std::runtime_error("Both type does not correspond");
+                    }
                 }
             }
             else{
-                type = std::get<LiteralExpr>(initializer)->getType();
+                switch(initializer.index()){
+                case 2: // literalExpr
+                    type = std::get<LiteralExpr>(initializer)->getType();
+                case 4: //variable
+                    break;
+                }
             }    
         }
         else{
