@@ -101,6 +101,10 @@ Stmt::While::While(ExprVariant condition, StmtVariant body) :
     condition(std::move(condition)), body(std::move(body))    
 {}
 
+Stmt::Function::Function(Token name, std::vector<Token> params, std::vector<StmtVariant> body) : 
+    name(name), params(std::move(params)), body(std::move(body))
+{}
+
 StmtVariant Ne::createExprSV(ExprVariant expr){
     return std::make_unique<Stmt::Expr>(std::move(expr));
 }
@@ -124,3 +128,9 @@ StmtVariant Ne::createIfSV(ExprVariant condition, StmtVariant thenBranch, std::o
 StmtVariant Ne::createWhileSV(ExprVariant condition, StmtVariant body){
     return std::make_unique<Stmt::While>(std::move(condition), std::move(body));
 }
+
+StmtVariant Ne::createFunctionSV(Token name, std::vector<Token> params, std::vector<StmtVariant> body){
+    return std::make_unique<Stmt::Function>(name, std::move(params), std::move(body));
+}
+
+

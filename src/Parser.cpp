@@ -16,8 +16,29 @@ namespace Ne{
     }
 
     StmtVariant Parser::declaration(){
+        if(match({TokenType::FUNC})) return function("function");
         if(match({TokenType::VAR})) return varDeclaration();
         return statement();
+    }
+
+    StmtVariant Parser::function(const std::string& kind){
+        Token name = consume(TokenType::IDENTIFIER, "Expect " + kind + " name.");
+        consume(TokenType::LEFT_PAREN, "Expect '(' after " + kind + " name.");
+        std::vector<Token> parameters;
+        if(!check(TokenType::RIGHT_PAREN)){
+            do
+            {
+                if(parameters.size() >= 255){
+                    throw std::runtime_error("can't have more than 255 arguments");
+                } 
+                parameters.push_back(consume(TokenType::IDENTIFIER, "Expect parameter name."));
+            } while (match({TokenType::COMMA}));
+        }
+        consume(TokenType::RIGHT_PAREN, "Expect ')' after parameters.");
+        
+        consume(TokenType::LEFT_BRACE, "Expect '{' before " + kind + " body.");
+        std::vector<StmtVariant> body = block();
+        return createFunctionSV(std::move(name), std::move(parameters), std::move(body));
     }
 
     StmtVariant Parser::varDeclaration(){

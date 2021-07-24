@@ -20,7 +20,7 @@ namespace Ne{
         IDENTIFIER, STRING, INT, DOUBLE, BOOL,
 
         // Keywords.
-        AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
+        AND, CLASS, ELSE, FALSE, FUNC, FOR, IF, NIL, OR,
         PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
 
         ENDOF
@@ -31,7 +31,7 @@ namespace Ne{
         {"class", TokenType::CLASS},
         {"else", TokenType::ELSE},
         {"false", TokenType::FALSE},
-        {"fun", TokenType::FUN},
+        {"func", TokenType::FUNC},
         {"for", TokenType::FOR},
         {"if", TokenType::IF},
         {"nil", TokenType::NIL},

@@ -53,8 +53,11 @@ namespace Ne{
             case 4: // If
                 evaluateIfStmt(std::get<IfStmt>(stmt));
                 break;
-            case 5: // If
+            case 5: // While
                 evaluateWhileStmt(std::get<WhileStmt>(stmt));
+                break;
+            case 6: // Function
+                evaluateFunctionStmt(std::get<FunctionStmt>(stmt));
                 break;
             }
     }
@@ -249,11 +252,22 @@ namespace Ne{
 
     void Interpreter::evaluateBlockStmt(BlockStmt& stmt){
         std::shared_ptr<Environment> previous = std::allocate_shared<Environment>(std::allocator<Environment>(), this->environment);
+        this->environment = Environment(previous);
         executeBlock(stmt->statements, std::make_shared<Environment>(Environment(previous)));
+        this->environment.clear();
         this->environment = *previous;
+
+        // executeBlock(stmt->statements, std::make_shared<Environment>(environment));
+        
     }
 
     void Interpreter::executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> env){
+        // std::shared_ptr<Environment> previous = std::allocate_shared<Environment>(std::allocator<Environment>(), this->environment);
+        // this->environment = Environment(env);
+        // evaluateStmts(statements);
+        // this->environment.clear();
+        // this->environment = *previous;
+
         this->environment = *env;
         evaluateStmts(statements);
         this->environment.clear();
@@ -288,5 +302,10 @@ namespace Ne{
         while(std::get<3>(evaluateExpr(stmt->condition))){
             evaluateStmt(stmt->body);
         }
+    }
+
+    void Interpreter::evaluateFunctionStmt(FunctionStmt& stmt){
+        // environment.define(stmt->name.toString(), std::make_shared<Function>(stmt));
+        environment.define("count", std::make_shared<Function>(stmt));
     }
 }

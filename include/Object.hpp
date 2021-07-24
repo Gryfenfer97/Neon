@@ -20,12 +20,6 @@ namespace Ne{
         }
     };
 
-    
 
-    // class Function : public Callable{
-    // public:
-    //     virtual LiteralObject call(Interpreter& interpreter, std::vector<LiteralObject>& args) override {
-    //         return "";
-    //     }
-    // };
+    
 }

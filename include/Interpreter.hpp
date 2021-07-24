@@ -27,11 +27,35 @@ namespace Ne{
         void evaluateBlockStmt(BlockStmt& stmt);
         void evaluateIfStmt(IfStmt& stmt);
         void evaluateWhileStmt(WhileStmt& stmt);
+        void evaluateFunctionStmt(FunctionStmt& stmt);
 
         void executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> environment);
+
+        Environment getGlobalEnv(){return globals;}
+        Environment getEnv(){return environment; }
 
     private:
         Environment globals;
         Environment environment;
+    };
+
+
+    class Function : public Callable{
+    private:
+        FunctionStmt declaration;
+    public:
+        Function(FunctionStmt& declaration) : Callable(){
+            this->declaration = std::move(declaration);
+            arity = this->declaration->params.size();
+        }
+
+        virtual LiteralObject call(Interpreter& interpreter, std::vector<LiteralObject>& args) override{
+            Environment env = Environment(std::make_shared<Environment>(interpreter.getGlobalEnv()));
+            for(int i=0;i<declaration->params.size();i++){
+                env.define(declaration->params.at(i).toString(), args.at(i));
+            }
+            interpreter.executeBlock(declaration->body, std::make_shared<Environment>(env));
+            return nullptr;
+        };
     };
 }
