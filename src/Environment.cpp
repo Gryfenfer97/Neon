@@ -24,7 +24,7 @@ namespace Ne{
 
     void Environment::assign(const Token& name, LiteralObject value){
         if(isVarExist(name.toString())){
-            if(get(name).index() == value.index() || get(name).index() == 4) // 4 is nullptr_t (NIL)
+            if(get(name).index() == value.index() || std::holds_alternative<nullptr_t>(get(name)))
                 getReferenceToVar(name) = value;
             else
                 throw std::runtime_error("error: implicit conversion");
