@@ -34,7 +34,9 @@ namespace Ne{
         [[nodiscard]] ExprVariant term();
         [[nodiscard]] ExprVariant factor();
         [[nodiscard]] ExprVariant unary();
+        [[nodiscard]] ExprVariant call();
         [[nodiscard]] ExprVariant primary();
+        [[nodiscard]] ExprVariant finishCall(ExprVariant callee);
         Token consume(TokenType type, const std::string& message);
 
     };

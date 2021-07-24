@@ -1,6 +1,12 @@
 #include <Interpreter.hpp>
+#include <Builtins/time.hpp>
 
 namespace Ne{
+    Interpreter::Interpreter(){
+        globals.define("getDateTime", std::make_shared<Builtins::GetDateTime>(Builtins::GetDateTime()));
+        environment = globals;
+    }
+
     LiteralObject Interpreter::evaluateExpr(ExprVariant& expr){
         switch(expr.index()){
         case 0: // Binary
@@ -17,6 +23,8 @@ namespace Ne{
             return evaluateAssign(std::get<AssignExpr>(expr));
         case 6: // Logical
             return evaluateLogical(std::get<LogicalExpr>(expr));
+        case 7: // Logical
+            return evaluateCall(std::get<CallExpr>(expr));
         default:
             return "";
         }
@@ -188,6 +196,24 @@ namespace Ne{
             throw std::runtime_error("operator not recongized.");
         }
         
+    }
+
+    LiteralObject Interpreter::evaluateCall(CallExpr& expr){
+        LiteralObject callee = evaluateExpr(expr->callee);
+        std::vector<LiteralObject> arguments;
+        for(auto& obj : expr->arguments){
+            arguments.push_back(evaluateExpr(obj));
+        }
+
+        if(!std::holds_alternative<CallablePtr>(callee)){
+            throw std::runtime_error("things has to be a callable");
+        }
+
+        CallablePtr function = std::get<4>(callee);
+        if(arguments.size() != function->getArity()){
+            throw std::runtime_error(expr->paren.toString() + " Excpected " + std::to_string(function->getArity()) + " arguments but got " + std::to_string(arguments.size()) + " arguments instead.");
+        }
+        return function->call(*this, arguments);
     }
 
     std::string Interpreter::stringify(LiteralObject obj){

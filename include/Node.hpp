@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <optional>
+#include <Object.hpp>
 
 namespace Ne{
     namespace Expr{
@@ -14,6 +15,7 @@ namespace Ne{
         struct Variable;
         struct Assign;
         struct Logical;
+        struct Call;
     }
     
     using BinaryExpr = std::unique_ptr<Expr::Binary>; 
@@ -23,10 +25,9 @@ namespace Ne{
     using VariableExpr = std::unique_ptr<Expr::Variable>;
     using AssignExpr = std::unique_ptr<Expr::Assign>; 
     using LogicalExpr = std::unique_ptr<Expr::Logical>;
+    using CallExpr = std::unique_ptr<Expr::Call>;
 
-    using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr, AssignExpr, LogicalExpr>;
-
-    using LiteralObject = std::variant<std::string, int, double, bool, nullptr_t>;
+    using ExprVariant = std::variant<BinaryExpr, GroupingExpr, LiteralExpr, UnaryExpr, VariableExpr, AssignExpr, LogicalExpr, CallExpr>;
 
     struct Expr::Binary{
         ExprVariant left;
@@ -70,6 +71,13 @@ namespace Ne{
         Logical(ExprVariant left, Token op, ExprVariant right);
     };
 
+    struct Expr::Call{
+        ExprVariant callee;
+        Token paren;
+        std::vector<ExprVariant> arguments;
+        Call(ExprVariant callee, Token paren, std::vector<ExprVariant> arguments);
+    };
+
     ExprVariant createBinaryEV(ExprVariant left, Token op, ExprVariant right);
     ExprVariant createGroupingEV(ExprVariant expression);
     ExprVariant createLiteralEV(const LiteralObject& literal);
@@ -77,6 +85,7 @@ namespace Ne{
     ExprVariant createVariableEV(Token name);
     ExprVariant createAssignEV(Token name, ExprVariant value);
     ExprVariant createLogicalEV(ExprVariant left, Token op, ExprVariant right);
+    ExprVariant createCallEV(ExprVariant callee, Token paren, std::vector<ExprVariant> arguments);
 
     // Statements
     namespace Stmt{

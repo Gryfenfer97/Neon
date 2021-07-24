@@ -291,7 +291,18 @@ namespace Ne{
             ExprVariant right = unary();
             return createUnaryEV(op, std::move(right));
         }
-        return primary();
+        return call();
+    }
+
+    ExprVariant Parser::call(){
+        ExprVariant expr = primary();
+        while(true){
+            if(match({TokenType::LEFT_PAREN}))
+                expr = finishCall(std::move(expr));
+            else
+                break;
+        }
+        return expr;
     }
 
     ExprVariant Parser::primary(){
@@ -316,6 +327,19 @@ namespace Ne{
             return createGroupingEV(std::move(expr));
         }
         return primary();
+    }
+
+    ExprVariant Parser::finishCall(ExprVariant callee){
+        std::vector<ExprVariant> arguments;
+        if(!check(TokenType::RIGHT_PAREN)){
+            do{
+                if(arguments.size() >= 255)
+                    throw std::runtime_error("Can't have more than 255 arguments.");
+                arguments.push_back(expression());
+            }while(match({TokenType::COMMA}));
+        }
+        Token paren = consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
+        return createCallEV(std::move(callee), paren, std::move(arguments));
     }
 
     Token Parser::consume(TokenType type, const std::string& message){

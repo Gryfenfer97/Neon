@@ -7,6 +7,8 @@
 namespace Ne{
     class Interpreter{
     public:
+        Interpreter();
+
         LiteralObject evaluateBinary(BinaryExpr& expr);
         LiteralObject evaluateGrouping(GroupingExpr& expr);
         LiteralObject evaluateLiteral(LiteralExpr& expr);
@@ -14,6 +16,7 @@ namespace Ne{
         LiteralObject evaluateVariable(VariableExpr& expr);
         LiteralObject evaluateAssign(AssignExpr& expr);
         LiteralObject evaluateLogical(LogicalExpr& expr);
+        LiteralObject evaluateCall(CallExpr& expr);
         std::string stringify(LiteralObject obj);
         LiteralObject evaluateExpr(ExprVariant& expr);
         void evaluateStmts(std::vector<StmtVariant>& statements);
@@ -28,6 +31,7 @@ namespace Ne{
         void executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> environment);
 
     private:
+        Environment globals;
         Environment environment;
     };
 }

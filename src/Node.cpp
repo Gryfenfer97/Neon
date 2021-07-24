@@ -45,6 +45,10 @@ Expr::Logical::Logical(ExprVariant left, Token op, ExprVariant right) :
     left(std::move(left)), op(op), right(std::move(right))
 {}
 
+Expr::Call::Call(ExprVariant callee, Token paren, std::vector<ExprVariant> arguments) :
+    callee(std::move(callee)), paren(paren), arguments(std::move(arguments))
+{}        
+
 ExprVariant Ne::createBinaryEV(ExprVariant left, Token op, ExprVariant right){
     return std::make_unique<Expr::Binary>(std::move(left), op, std::move(right));
 }
@@ -71,6 +75,10 @@ ExprVariant Ne::createAssignEV(Token name, ExprVariant value){
 
 ExprVariant Ne::createLogicalEV(ExprVariant left, Token op, ExprVariant right){
     return std::make_unique<Expr::Logical>(std::move(left), op, std::move(right));
+}
+
+ExprVariant Ne::createCallEV(ExprVariant callee, Token paren, std::vector<ExprVariant> arguments){
+    return std::make_unique<Expr::Call>(std::move(callee), paren, std::move(arguments));
 }
 
 Stmt::Expr::Expr(ExprVariant expr) : expression(std::move(expr))
