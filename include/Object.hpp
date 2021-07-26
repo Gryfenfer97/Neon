@@ -14,7 +14,7 @@ namespace Ne{
     protected:
         std::size_t arity;
     public:
-        virtual LiteralObject call(Interpreter& interpreter, std::vector<LiteralObject>& args){return "kfjbd";};
+        virtual LiteralObject call(Interpreter& interpreter, std::vector<LiteralObject>& args){return "💩";};
         std::size_t getArity(){
             return arity;
         }

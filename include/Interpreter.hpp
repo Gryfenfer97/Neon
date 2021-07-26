@@ -30,9 +30,9 @@ namespace Ne{
         void evaluateFunctionStmt(FunctionStmt& stmt);
 
         void executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> environment);
-
-        Environment getGlobalEnv(){return globals;}
-        Environment getEnv(){return environment; }
+        
+        Environment getGlobalEnv(){std::cout << "hey" << std::endl; return globals;}
+        Environment getEnv(){std::cout << "bonne fonction appelée" << std::endl; return environment; }
 
     private:
         Environment globals;
@@ -50,7 +50,7 @@ namespace Ne{
         }
 
         virtual LiteralObject call(Interpreter& interpreter, std::vector<LiteralObject>& args) override{
-            Environment env = Environment(std::make_shared<Environment>(interpreter.getGlobalEnv()));
+            Environment env = Environment(std::make_shared<Environment>(interpreter.getEnv()));
             for(int i=0;i<declaration->params.size();i++){
                 env.define(declaration->params.at(i).toString(), args.at(i));
             }

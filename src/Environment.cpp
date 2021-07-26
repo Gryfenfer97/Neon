@@ -8,10 +8,7 @@ namespace Ne{
     }
 
     void Environment::define(const std::string& name, LiteralObject value){
-        if(!isVarExist(name))
-            values[name] = value;
-        else
-            throw std::runtime_error("error: the variable '" + name + "' already exist.");
+        values[name] = value;
     }
 
     LiteralObject Environment::get(const Token& name){

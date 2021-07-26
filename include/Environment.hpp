@@ -22,8 +22,10 @@ namespace Ne
         void define(const std::string& name, LiteralObject value);
         LiteralObject get(const Token& name);
         void assign(const Token& name, LiteralObject value);
-        std::shared_ptr<Environment> enclosing = nullptr;
         void clear();
+        
+        
+        std::shared_ptr<Environment> enclosing = nullptr;
 
     private:
         std::unordered_map<std::string, LiteralObject> values;
