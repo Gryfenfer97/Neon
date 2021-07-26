@@ -1,7 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
-#include <Node.hpp>
+#include <Neon/Node.hpp>
 
 namespace Ne
 {
@@ -24,6 +24,7 @@ namespace Ne
         void assign(const Token& name, LiteralObject value);
         void clear();
         
+        std::shared_ptr<Environment> getParent();
         
         std::shared_ptr<Environment> enclosing = nullptr;
 

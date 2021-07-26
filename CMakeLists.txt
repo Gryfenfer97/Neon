@@ -4,6 +4,7 @@ project(Neon)
 
 file(GLOB_RECURSE SRC
     ${Neon_SOURCE_DIR}/src/*.cpp
+    ${Neon_SOURCE_DIR}/include/*.hpp
     ${Neon_SOURCE_DIR}/main.cpp
 )
 

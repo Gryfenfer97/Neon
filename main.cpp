@@ -3,10 +3,10 @@
 #include <vector>
 #include <sstream>
 #include <string>
-#include <Lexer.hpp>
-#include <AstPrinter.hpp>
-#include <Parser.hpp>
-#include <Interpreter.hpp>
+#include <Neon/Lexer.hpp>
+#include <Neon/AstPrinter.hpp>
+#include <Neon/Parser.hpp>
+#include <Neon/Interpreter.hpp>
 
 void run(const std::string &code, Ne::Interpreter& interpreter)
 {

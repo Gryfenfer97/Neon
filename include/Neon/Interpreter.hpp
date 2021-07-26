@@ -1,8 +1,8 @@
 #pragma once
-#include <Node.hpp>
+#include <Neon/Node.hpp>
 #include <memory>
 #include <optional>
-#include <Environment.hpp>
+#include <Neon/Environment.hpp>
 
 namespace Ne{
     class Interpreter{
@@ -32,11 +32,11 @@ namespace Ne{
         void executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> environment);
         
         Environment getGlobalEnv(){std::cout << "hey" << std::endl; return globals;}
-        Environment getEnv(){std::cout << "bonne fonction appelée" << std::endl; return environment; }
+        std::shared_ptr<Environment> getEnv(){std::cout << "bonne fonction appelée" << std::endl; return environment; }
 
     private:
         Environment globals;
-        Environment environment;
+        std::shared_ptr<Environment> environment;
     };
 
 
@@ -50,9 +50,9 @@ namespace Ne{
         }
 
         virtual LiteralObject call(Interpreter& interpreter, std::vector<LiteralObject>& args) override{
-            Environment env = Environment(std::make_shared<Environment>(interpreter.getEnv()));
+            std::shared_ptr<Environment> env = std::make_shared<Environment>(interpreter.getEnv());
             for(int i=0;i<declaration->params.size();i++){
-                env.define(declaration->params.at(i).toString(), args.at(i));
+                env->define(declaration->params.at(i).toString(), args.at(i));
             }
             interpreter.executeBlock(declaration->body, std::make_shared<Environment>(env));
             return nullptr;

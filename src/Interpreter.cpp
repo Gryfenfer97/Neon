@@ -1,10 +1,10 @@
-#include <Interpreter.hpp>
-#include <Builtins/time.hpp>
+#include <Neon/Interpreter.hpp>
+#include <Neon/Builtins/time.hpp>
 
 namespace Ne{
     Interpreter::Interpreter(){
         globals.define("getDateTime", std::make_shared<Builtins::GetDateTime>(Builtins::GetDateTime()));
-        environment = globals;
+        environment = std::make_shared<Environment>(globals);
     }
 
     LiteralObject Interpreter::evaluateExpr(ExprVariant& expr){
@@ -170,12 +170,12 @@ namespace Ne{
     }
 
     LiteralObject Interpreter::evaluateVariable(VariableExpr& expr){
-        return environment.get(expr->name);
+        return environment->get(expr->name);
     }
 
     LiteralObject Interpreter::evaluateAssign(AssignExpr& expr){
         LiteralObject value = evaluateExpr(expr->value);
-        environment.assign(expr->name, value);
+        environment->assign(expr->name, value);
         return value;
     }
 
@@ -247,7 +247,7 @@ namespace Ne{
     void Interpreter::evaluateVarStmt(VarStmt& stmt){
         LiteralObject value;
         value = evaluateExpr(stmt->initializer);
-        environment.define(stmt->name.toString(), value);
+        environment->define(stmt->name.toString(), value);
     }
 
     void Interpreter::evaluateBlockStmt(BlockStmt& stmt){
@@ -257,20 +257,20 @@ namespace Ne{
         // this->environment.clear();
         // this->environment = *previous;
 
-        executeBlock(stmt->statements, std::make_shared<Environment>(std::make_shared<Environment>(this->environment)));
+        executeBlock(stmt->statements, std::make_shared<Environment>(this->environment));
         
     }
 
     void Interpreter::executeBlock(std::vector<StmtVariant>& statements, std::shared_ptr<Environment> env){
-        std::shared_ptr<Environment> previous = std::allocate_shared<Environment>(std::allocator<Environment>(), this->environment);
-        this->environment = *env;
-        evaluateStmts(statements);
-        this->environment.clear();
-        this->environment = *previous;
-
+        // std::shared_ptr<Environment> previous = std::allocate_shared<Environment>(std::allocator<Environment>(), this->environment);
         // this->environment = *env;
         // evaluateStmts(statements);
         // this->environment.clear();
+        // this->environment = *previous;
+
+        this->environment = env;
+        evaluateStmts(statements);
+        this->environment = env->getParent();
     }
 
     void Interpreter::evaluateIfStmt(IfStmt& stmt){
@@ -306,6 +306,6 @@ namespace Ne{
 
     void Interpreter::evaluateFunctionStmt(FunctionStmt& stmt){
         // environment.define(stmt->name.toString(), std::make_shared<Function>(stmt));
-        this->environment.define("count", std::make_shared<Function>(stmt));
+        this->environment->define("count", std::make_shared<Function>(stmt));
     }
 }

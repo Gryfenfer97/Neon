@@ -1,5 +1,5 @@
 #pragma once
-#include "../Object.hpp"
+#include <Neon/Object.hpp>
 #include <chrono>
 
 namespace Ne{

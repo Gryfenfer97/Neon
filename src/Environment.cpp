@@ -1,4 +1,4 @@
-#include <Environment.hpp>
+#include <Neon/Environment.hpp>
 
 namespace Ne{
 
@@ -43,6 +43,10 @@ namespace Ne{
     void Environment::clear(){
         values.clear();
     } 
+
+    std::shared_ptr<Environment> Environment::getParent(){
+        return enclosing;
+    }
 
     bool Environment::isVarExist(const std::string& name){
         if(values.find(name) != values.end()){
