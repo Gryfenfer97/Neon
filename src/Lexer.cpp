@@ -33,7 +33,13 @@ void Lexer::scanToken(){
             }
         case '-': addToken(TokenType::MINUS); break;
         case '*': addToken(TokenType::STAR); break;
-        case '/': addToken(TokenType::SLASH); break;
+        case '/': 
+            if(match('/')){
+                while(*current != '\n' && (current+1) != m_source.end()) ++current; 
+                break;
+            }else{
+                addToken(TokenType::SLASH); break;
+            }
         case ':': addToken(TokenType::COLON); break;
         case ';': addToken(TokenType::SEMICOLON); break;
         case '!':
